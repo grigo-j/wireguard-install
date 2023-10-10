@@ -97,7 +97,7 @@ function getHomeDirForClient() {
 
 function initialCheck() {
 	isRoot
-	checkVirt
+	# checkVirt
 	checkOS
 }
 
@@ -171,45 +171,45 @@ function installWireGuard() {
 	installQuestions
 
 	# Install WireGuard tools and module
-	if [[ ${OS} == 'ubuntu' ]] || [[ ${OS} == 'debian' && ${VERSION_ID} -gt 10 ]]; then
-		apt-get update
-		apt-get install -y wireguard iptables resolvconf qrencode
-	elif [[ ${OS} == 'debian' ]]; then
-		if ! grep -rqs "^deb .* buster-backports" /etc/apt/; then
-			echo "deb http://deb.debian.org/debian buster-backports main" >/etc/apt/sources.list.d/backports.list
-			apt-get update
-		fi
-		apt update
-		apt-get install -y iptables resolvconf qrencode
-		apt-get install -y -t buster-backports wireguard
-	elif [[ ${OS} == 'fedora' ]]; then
-		if [[ ${VERSION_ID} -lt 32 ]]; then
-			dnf install -y dnf-plugins-core
-			dnf copr enable -y jdoss/wireguard
-			dnf install -y wireguard-dkms
-		fi
-		dnf install -y wireguard-tools iptables qrencode
-	elif [[ ${OS} == 'centos' ]] || [[ ${OS} == 'almalinux' ]] || [[ ${OS} == 'rocky' ]]; then
-		if [[ ${VERSION_ID} == 8* ]]; then
-			yum install -y epel-release elrepo-release
-			yum install -y kmod-wireguard
-			yum install -y qrencode # not available on release 9
-		fi
-		yum install -y wireguard-tools iptables
-	elif [[ ${OS} == 'oracle' ]]; then
-		dnf install -y oraclelinux-developer-release-el8
-		dnf config-manager --disable -y ol8_developer
-		dnf config-manager --enable -y ol8_developer_UEKR6
-		dnf config-manager --save -y --setopt=ol8_developer_UEKR6.includepkgs='wireguard-tools*'
-		dnf install -y wireguard-tools qrencode iptables
-	elif [[ ${OS} == 'arch' ]]; then
-		pacman -S --needed --noconfirm wireguard-tools qrencode
-	fi
+	# if [[ ${OS} == 'ubuntu' ]] || [[ ${OS} == 'debian' && ${VERSION_ID} -gt 10 ]]; then
+	# 	apt-get update
+	# 	apt-get install -y wireguard iptables resolvconf qrencode
+	# elif [[ ${OS} == 'debian' ]]; then
+	# 	if ! grep -rqs "^deb .* buster-backports" /etc/apt/; then
+	# 		echo "deb http://deb.debian.org/debian buster-backports main" >/etc/apt/sources.list.d/backports.list
+	# 		apt-get update
+	# 	fi
+	# 	apt update
+	# 	apt-get install -y iptables resolvconf qrencode
+	# 	apt-get install -y -t buster-backports wireguard
+	# elif [[ ${OS} == 'fedora' ]]; then
+	# 	if [[ ${VERSION_ID} -lt 32 ]]; then
+	# 		dnf install -y dnf-plugins-core
+	# 		dnf copr enable -y jdoss/wireguard
+	# 		dnf install -y wireguard-dkms
+	# 	fi
+	# 	dnf install -y wireguard-tools iptables qrencode
+	# elif [[ ${OS} == 'centos' ]] || [[ ${OS} == 'almalinux' ]] || [[ ${OS} == 'rocky' ]]; then
+	# 	if [[ ${VERSION_ID} == 8* ]]; then
+	# 		yum install -y epel-release elrepo-release
+	# 		yum install -y kmod-wireguard
+	# 		yum install -y qrencode # not available on release 9
+	# 	fi
+	# 	yum install -y wireguard-tools iptables
+	# elif [[ ${OS} == 'oracle' ]]; then
+	# 	dnf install -y oraclelinux-developer-release-el8
+	# 	dnf config-manager --disable -y ol8_developer
+	# 	dnf config-manager --enable -y ol8_developer_UEKR6
+	# 	dnf config-manager --save -y --setopt=ol8_developer_UEKR6.includepkgs='wireguard-tools*'
+	# 	dnf install -y wireguard-tools qrencode iptables
+	# elif [[ ${OS} == 'arch' ]]; then
+	# 	pacman -S --needed --noconfirm wireguard-tools qrencode
+	# fi
 
-	# Make sure the directory exists (this does not seem the be the case on fedora)
-	mkdir /etc/wireguard >/dev/null 2>&1
+	# # Make sure the directory exists (this does not seem the be the case on fedora)
+	# mkdir /etc/wireguard >/dev/null 2>&1
 
-	chmod 600 -R /etc/wireguard/
+	# chmod 600 -R /etc/wireguard/
 
 	SERVER_PRIV_KEY=$(wg genkey)
 	SERVER_PUB_KEY=$(echo "${SERVER_PRIV_KEY}" | wg pubkey)
